@@ -83,10 +83,11 @@ void twi_init(void)
   twi_state = TWI_READY;
   twi_sendStop = true;		// default value
   twi_inRepStart = false;
-  
+
+  // Pullup functionality was moved to Wire Library
   // activate internal pullups for twi.
-  digitalWrite(SDA, 1);
-  digitalWrite(SCL, 1);
+  //digitalWrite(SDA, 1);
+  //digitalWrite(SCL, 1);
 
   // initialize twi prescaler and bit rate
   cbi(TWSR, TWPS0);
@@ -113,9 +114,10 @@ void twi_disable(void)
   // disable twi module, acks, and twi interrupt
   TWCR &= ~(_BV(TWEN) | _BV(TWIE) | _BV(TWEA));
 
+  // Pullup functionality was moved to Wire Library
   // deactivate internal pullups for twi.
-  digitalWrite(SDA, 0);
-  digitalWrite(SCL, 0);
+  //digitalWrite(SDA, 0);
+  //digitalWrite(SCL, 0);
 }
 
 /* 
