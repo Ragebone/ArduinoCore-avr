@@ -45,6 +45,7 @@ uint8_t TwoWire::transmitting = 0;
 void (*TwoWire::user_onRequest)(void);
 void (*TwoWire::user_onReceive)(int);
 
+bool TwoWire::usePullups = true;        // default ON because of legacy compatibility
 // Constructors ////////////////////////////////////////////////////////////////
 
 TwoWire::TwoWire()
@@ -60,6 +61,11 @@ void TwoWire::begin(void)
 
   txBufferIndex = 0;
   txBufferLength = 0;
+
+  if(usePullups){
+    digitalWrite(SDA, 1);
+    digitalWrite(SCL, 1);
+  }
 
   twi_init();
   twi_attachSlaveTxEvent(onRequestService); // default callback must exist
@@ -79,6 +85,11 @@ void TwoWire::begin(int address)
 
 void TwoWire::end(void)
 {
+  if(usePullups){
+    digitalWrite(SDA, 0);
+    digitalWrite(SCL, 0);
+  }
+
   twi_disable();
 }
 
@@ -370,6 +381,21 @@ void TwoWire::onReceive( void (*function)(int) )
 void TwoWire::onRequest( void (*function)(void) )
 {
   user_onRequest = function;
+}
+
+// optional functionality to disable or enable the use of internal pullups
+void TwoWire::disablePullups(void)
+{
+    usePullups = false;
+}
+void TwoWire::enablePullups(void)
+{
+    usePullups = true;
+}
+// and to get their state
+bool TwoWire::getPullupStatus(void)
+{
+    return usePullups;
 }
 
 // Preinstantiate Objects //////////////////////////////////////////////////////

@@ -43,6 +43,8 @@ class TwoWire : public Stream
     static uint8_t txBufferIndex;
     static uint8_t txBufferLength;
 
+    static bool usePullups;
+
     static uint8_t transmitting;
     static void (*user_onRequest)(void);
     static void (*user_onReceive)(int);
@@ -75,6 +77,10 @@ class TwoWire : public Stream
     virtual void flush(void);
     void onReceive( void (*)(int) );
     void onRequest( void (*)(void) );
+
+    void disablePullups(void);
+    void enablePullups(void);
+    bool getPullupStatus(void);
 
     inline size_t write(unsigned long n) { return write((uint8_t)n); }
     inline size_t write(long n) { return write((uint8_t)n); }
